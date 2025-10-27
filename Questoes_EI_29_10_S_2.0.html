@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulado Mpox - 30 Questões</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+            padding: 10px;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #2c3e50;
+            font-size: 1.4em;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #7f8c8d;
+            font-size: 0.9em;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #3498db;
+        }
+
+        .disciplina {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px;
+            border-radius: 6px;
+            margin: 25px 0 15px 0;
+            font-weight: bold;
+            font-size: 1em;
+            text-align: center;
+        }
+
+        .questao {
+            background: #fff;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .numero {
+            background: #3498db;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            display: inline-block;
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 0.9em;
+        }
+
+        .enunciado {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1em;
+            font-weight: 500;
+        }
+
+        .alternativa {
+            background: #f8f9fa;
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 6px;
+            border-left: 4px solid #95a5a6;
+            cursor: pointer;
+            transition: all 0.3s;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        .alternativa:hover {
+            background: #e8f4f8;
+            border-left-color: #3498db;
+        }
+
+        .alternativa:active {
+            transform: scale(0.98);
+        }
+
+        .alternativa.selecionada {
+            background: #d4edff;
+            border-left-color: #3498db;
+            font-weight: bold;
+        }
+
+        .alternativa.correta {
+            background: #d4edda;
+            border-left-color: #28a745;
+        }
+
+        .alternativa.errada {
+            background: #f8d7da;
+            border-left-color: #dc3545;
+        }
+
+        .letra {
+            font-weight: bold;
+            color: #3498db;
+            margin-right: 8px;
+        }
+
+        .gabarito-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: bold;
+            width: 100%;
+            margin: 30px 0 10px 0;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+        }
+
+        .gabarito-btn:active {
+            transform: scale(0.98);
+        }
+
+        .resultado {
+            display: none;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 10px 0 20px 0;
+            text-align: center;
+            font-size: 1.2em;
+            font-weight: bold;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+        }
+
+        .resultado.show {
+            display: block;
+        }
+
+        .resultado-numero {
+            font-size: 2em;
+            margin: 10px 0;
+        }
+
+        .gabarito {
+            display: none;
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .gabarito.show {
+            display: block;
+        }
+
+        .gabarito h2 {
+            color: #856404;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .gabarito-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .gabarito-item {
+            background: white;
+            padding: 10px;
+            border-radius: 6px;
+            text-align: center;
+            border: 2px solid #ffc107;
+            font-weight: bold;
+        }
+
+        .gabarito-item.acertou {
+            background: #d4edda;
+            border-color: #28a745;
+            color: #155724;
+        }
+
+        .gabarito-item.errou {
+            background: #f8d7da;
+            border-color: #dc3545;
+            color: #721c24;
+        }
+
+        .gabarito-item.nao-respondeu {
+            background: #fff3cd;
+            border-color: #ffc107;
+            color: #856404;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 5px;
+                font-size: 15px;
+            }
+
+            .container {
+                padding: 12px;
+            }
+
+            h1 {
+                font-size: 1.2em;
+            }
+
+            .disciplina {
+                font-size: 0.95em;
+                padding: 10px;
+            }
+
+            .questao {
+                padding: 12px;
+            }
+
+            .enunciado {
+                font-size: 0.95em;
+            }
+
+            .alternativa {
+                padding: 10px;
+                font-size: 0.95em;
+            }
+
+            .gabarito-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 8px;
+            }
+
+            .gabarito-item {
+                padding: 8px;
+                font-size: 0.9em;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .gabarito-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧠 Simulado - Caso Clínico Mpox</h1>
+        <p class="subtitle">Exercício Integrado MEO | 30 Questões</p>
+
+        <div class="disciplina">📚 PROCESSOS ORGANIZACIONAIS (1-5)</div>
+
+        <div class="questao">
+            <span class="numero">Questão 1</span>
+            <p class="enunciado">Durante a visita domiciliar realizada pela equipe de enfermagem, foi observado que João apresentava melhora física, mas demonstrava sinais de sofrimento psicológico. Neste contexto, qual é a PRINCIPAL ação que deve ser documentada no prontuário do paciente?</p>
+            <div class="alternativa"><span class="letra">A)</span> Documentar somente que o paciente está melhor e liberar do acompanhamento domiciliar</div>
+            <div class="alternativa"><span class="letra">B)</span> Anotar o exame do estado mental completo, incluindo humor, afeto, pensamento e comportamento observados</div>
+            <div class="alternativa"><span class="letra">C)</span> Registrar apenas os dados vitais e evolução das lesões cutâneas, pois o foco é a doença física</div>
+            <div class="alternativa"><span class="letra">D)</span> Escrever que o paciente está triste, sem detalhar os aspectos psicológicos observados</div>
+        </div>
+
+        <div class="questao">
+            <span class="numero">Questão 2</span>
+            <p class="enunciado">A equipe de enfermagem realizou o exame do estado mental de João durante a visita. Ao observar que ele apresentava "fala em tom de voz baixo, por vezes arrastado" e "expressão facial de tristeza", esses dados devem ser registrados em qual componente do exame?</p>
+            <div class="alternativa"><span class="letra">A)</span> Aparência e comportamento</div>
+            <div class="alternativa"><span class="letra">B)</span> Percepção</div>
+            <div class="alternativa"><span class="letra">C)</span> Consciência</div>
+            <div class="alternativa"><span class="letra">D)</span> Pensamento</div>
+        </div>
+
+        <div class="questao">
+            <span class="numero">Questão 3</span>
+            <p class="enunciado">Ao planejar a Sistematização da Assistência de Enfermagem (SAE) para João, o técnico de enfermagem identifica que, além dos cuidados com as lesões de pele, há necessidade de intervenções relacionadas ao isolamento social e ansiedade. Qual diagnóstico de enfermagem está MAIS adequado para essa situação?</p>
+            <div class="alternativa"><span class="letra">A)</span> Dor aguda relacionada exclusivamente às pústulas na pele</div>
+            <div class="alternativa"><span class="letra">B)</span> Nutrição desequilibrada devido à perda de apetite somente</div>
+            <div class="alternativa"><span class="letra">C)</span> Risco de infecção relacionado às lesões cutâneas apenas</div>
+            <div class="alternativa"><span class="letra">D)</span> Ansiedade relacionada ao isolamento social e estigma da doença</div>
+        </div>
+
+        <div class="questao">
+            <span class="numero">Questão 4</span>
+            <p class="enunciado">A Monkeypox (Mpox) é uma doença de notificação compulsória. Após o diagnóstico de João na UBS, qual é o prazo CORRETO para realizar a notificação ao sistema de vigilância epidemiológica?</p>
+            <div class="alternativa"><span class="letra">A)</span> Notificação imediata, em até 24 horas</div>
+            <div class="alternativa"><span class="letra">B)</span> Notificação mensal, junto com outros agravos</div>
+            <div class="alternativa"><span class="letra">C)</span> Não necessita notificação, pois é atendimento ambulatorial</div>
+            <div class="alternativa"><span class="letra">D)</span> Notificação semanal, até o final da semana epidemiológica</div>
+        </div>
+
+        <div class="questao">
+            <span class="numero">Questão 5</span>
+            <p class="enunciado">Durante a visita domiciliar, a equipe percebe que João está com dificuldade de concentração no trabalho remoto e sentimentos de culpa. Pensando na continuidade do cuidado, qual encaminhamento é MAIS indicado neste momento?</p>
+            <div class="alternativa"><span class="letra">A)</span> Informar que esses sintomas são normais e vão passar sozinhos sem intervenção</div>
+            <div class="alternativa"><span class="letra">B)</span> Orientar que ele tome mais analgésicos para melhorar o humor</div>
+            <div class="alternativa"><span class="letra">C)</span> Sugerir que ele procure apoio psicológico/saúde mental na rede de atenção</div>
+            <div class="alternativa"><span class="letra">D)</span> Encaminhar para internação hospitalar imediata por risco de suicídio</div>
+        </div>
+
+        <div class="disciplina">❤️ ÉTICA E BIOÉTICA (6-10)</div>
+
+        <div class="questao">
+            <span class="numero">Questão 6</span>
+            <p class="enunciado">João relata sentir-se "sujo" e com vergonha devido à forma como a mídia apresenta a doença. Considerando os princípios bioéticos, qual atitude da equipe de enfermagem respeita o princípio da NÃO MALEFICÊNCIA?</p>
+            <div class="alternativa"><span class="letra">A)</span> Orientar João a não sair de casa mesmo após a cura para evitar julgamentos</div>
+            <div class="alternativa"><span class="letra">B)</span> Evitar reforçar o estigma e oferecer informações corretas sobre a transmissão da doença</div>
+            <div class="alternativa"><span class="letra">C)</span> Comentar com outros profissionais da UBS sobre o caso de João em áreas comuns</div>
+            <div class="alternativa"><span class="letra">D)</span> Dizer que ele deveria ter mais cuidado para não ter contraído a doença</div>
+        </div>
+
+        <div class="questao">
+            <span class="numero">Questão 7</span>
+            <p class="enunciado">A equipe de enfermagem precisa orientar João sobre as medidas de isolamento domiciliar. Ao fazer isso respeitando a AUTONOMIA do paciente, a conduta adequada é:</p>
+            <div class="alternativa"><span class="letra">A)</span> Deixar que ele decida sozinho o que fazer, sem fornecer orientações técnicas</div>
+            <div class="alternativa"><span class="letra">B)</span> Ameaçar com internação compulsória caso ele não siga todas as regras</div>
+            <div class="alternativa"><span class="letra">C)</span> Impor as regras de isolamento sem perguntar se ele concorda ou tem dúvidas</div>
+            <div class="alternativa"><span class="letra">D)</span> Explicar as orientações, esclarecer dúvidas e respeitar suas decisões informadas</div>
+        </div>
+
+        <div class="questao">
+            <span class="numero">Questão 8</span>
+            <p class="enunciado">João está desempregado e preocupado com sua situação financeira durante o isolamento. Pensando no princípio da JUSTIÇA, qual ação demonstra aplicação deste princípio?</p>
+            <div class="alternativa"><span class="letra">A)</span> Informar sobre seus direitos e possíveis benefícios sociais disponíveis</div>
+            <div class="alternativa"><span class="letra">B)</span> Sugerir que ele quebre o isolamento para trabalhar e ganhar dinheiro</div>
+            <div class="alternativa"><span class="letra">C)</span> Cobrar dele mais empenho em procurar emprego durante o tratamento</div>
+            <div class="alternativa"><span class="letra">D)</span> Dizer que não é problema da equipe de saúde e que ele deve resolver sozinho</div>
+        </div>
+
+        <div class="questao">
+            <span class="numero">Questão 9</span>
+            <p class="enunciado">Um colega de trabalho de João liga para a UBS perguntando se ele está com Mpox, pois ouviu comentários. Conforme o Código de Ética de Enfermagem, a conduta CORRETA do profissional é:</p>
+            <div class="alternativa"><span class="letra">A)</span> Informar apenas que João está doente, sem especificar qual doença</div>
+            <div class="alternativa"><span class="letra">B)</span> Negar qualquer informação, respeitando o sigilo profissional do paciente</div>
+            <div class="alternativa"><span class="letra">C)</span> Dizer que não pode falar, mas sugerir que o colega procure João diretamente</div>
+            <div class="alternativa"><span class="letra">D)</span> Confirmar o diagnóstico, pois o colega pode ter sido exposto e precisa saber</div>
+        </div>
+
+        <div class="questao">
+            <span class="numero">Questão 10</span>
+            <p class="enunciado">João expressa sentimento de culpa por ter contraído Mpox, dizendo "eu fiz algo errado". A postura ética MAIS adequada do técnico de enfermagem é:</p>
+            <div class="alternativa"><span class="letra">A)</span> Dizer que ele deve ter mais cuidado da próxima vez para não pegar outras doenças</div>
+            <div class="alternativa"><span class="letra">B)</span> Acolher sem julgamento, esclarecer sobre transmissão e combater o estigma</div>
+            <div class="alternativa"><span class="letra">C)</span> Ignorar o comentário e focar apenas nos cuidados com as lesões de pele</div>
+            <div class="alternativa"><span class="letra">D)</span> Concordar que ele teve comportamentos de risco e deve se arrepender</div>
+        </div>
+
+        <div class="disciplina">👥 RELAÇÕES HUMANAS (11-15)</div>
+
+        <div class="questao">
+            <span class="numero">Questão 11</span>
+            <p class="enunciado">João diz: "Estou me sentindo preso em casa. Eu sempre fui muito ativo... Agora me sinto um pária". Utilizando comunicação terapêutica, qual resposta demonstra MELHOR uso da técnica de validação de sentimentos?</p>
+            <div class="alternativa"><span class="letra">A)</span> "Pare de reclamar, você precisa aceitar a situação e seguir em frente"</div>
+            <div class="alternativa"><span class="letra">B)</span> "Imagino como deve ser difícil para você essa mudança na sua rotina e esse sentimento de isolamento"</div>
+            <div class="alternativa"><span class="letra">C)</span> "Você está exagerando, tem gente em situação muito pior que a sua"</div>
+            <div class="alternativa"><span class="letra">D)</span> "Não fique assim, logo você vai melhorar e tudo vai voltar ao normal"</div>
+        </div>
+
+        <div class="questao">
+            <span class="numero">Questão 12</span>
+            <p class="enunciado">Durante a visita, João está com "olhar baixo" e fala pouco. Para estabelecer uma escuta ativa efetiva, o técnico de enfermagem deve:</p>
+            <div class="alternativa"><span class="letra">A)</span> Ficar em silêncio o tempo todo para não incomodar o paciente</div>
+            <div class="alternativa"><span class="letra">B)</span> Interromper sempre que ele fizer pausa para dar conselhos rápidos</div>
+            <div class="alternativa"><span class="letra">C)</span> Olhar para o celular enquanto João fala, para não constrangê-lo</div>
+            <div class="alternativa"><span class="letra">D)</span> Manter contato visual, postura aberta e demonstrar interesse genuíno no que ele diz</div>
+        </div>
+
+        <div class="questao">
+            <span class="numero">Questão 13</span>
+            <p class="enunciado">João relata ter perdido o apetite e dificuldade para dormir. Para criar um ambiente seguro e de confiança, qual abordagem é MAIS adequada?</p>
+            <div class="alternativa"><span class="letra">A)</span> Mudar de assunto rapidamente para não deixar João mais triste</div>
+            <div class="alternativa"><span class="letra">B)</span> Perguntar detalhes sobre alimentação e sono, investigando possíveis causas emocionais</div>
+            <div class="alternativa"><span class="letra">C)</span> Dizer que isso é frescura e que ele precisa se alimentar e dormir</div>
+            <div class="alternativa"><span class="letra">D)</span> Receitar medicamentos para dormir sem avaliar o contexto psicológico</div>
+        </div>
+
+        <div class="questao">
+            <span class="numero">Questão 14</span>
+            <p class="enunciado">A equipe percebe que João precisa de acompanhamento multiprofissional (médico, enfermagem, psicologia). Para fortalecer o vínculo terapêutico, é importante:</p>
+            <div class="alternativa"><span class="letra">A)</span> Atender João apenas uma vez e liberar para retorno se ele quiser</div>
+            <div class="alternativa"><span class="letra">B)</span> Garantir continuidade do cuidado com comunicação efetiva entre a equipe</div>
+            <div class="alternativa"><span class="letra">C)</span> Cada profissional atender separadamente sem trocar informações entre si</div>
+            <div class="alternativa"><span class="letra">D)</span> Focar somente na doença física e ignorar as questões emocionais</div>
+        </div>
+
+        <div class="questao">
+            <span class="numero">Questão 15</span>
+            <p class="enunciado">João menciona: "As notícias que vejo na internet e na TV me fazem sentir sujo". Para trabalhar a empatia e desconstruir o estigma, o profissional deve:</p>
+            <div class="alternativa"><span class="letra">A)</span> Dizer que ele está sendo muito sensível e precisa ser mais forte</div>
+            <div class="alternativa"><span class="letra">B)</span> Orientar que ele pare de assistir TV e usar internet durante o tratamento</div>
+            <div class="alternativa"><span class="letra">C)</span> Acolher o sentimento, explicar que a doença não define o caráter dele</div>
+            <div class="alternativa"><span class="letra">D)</span> Concordar que a mídia está certa em alertar sobre os perigos da doença</div>
+        </div>
+
+        <div class="disciplina">🌿 SAÚDE AMBIENTAL (16-20)</div>
+
+        <div class="questao">
+            <span class="numero">Questão 16</span>
+            <p class="enunciado">Para garantir um isolamento domiciliar adequado para João, qual orientação sobre o AMBIENTE é MAIS importante?</p>
+            <div class="alternativa"><span class="letra">A)</span> Não é necessário separar ambiente, apenas manter distância de 1 metro</div>
+            <div class="alternativa"><span class="letra">B)</span> Manter todas as janelas fechadas para evitar que o vírus saia de casa</div>
+            <div class="alternativa"><span class="letra">C)</span> Dividir o mesmo quarto com outras pessoas, mas usar máscara o tempo todo</div>
+            <div class="alternativa"><span class="letra">D)</span> Utilizar um quarto separado se possível, com boa ventilação natural</div>
+        </div>
+
+        <div class="questao">
+            <span class="numero">Questão 17</span>
+            <p class="enunciado">João precisa descartar os curativos utilizados nas lesões cutâneas. A orientação CORRETA sobre descarte de resíduos infectantes é:</p>
+            <div class="alternativa"><span class="letra">A)</span> Colocar em saco plástico duplo, identificar e separar como resíduo infectante</div>
+            <div class="alternativa"><span class="letra">B)</span> Queimar os curativos no quintal de casa para eliminar o vírus</div>
+            <div class="alternativa"><span class="letra">C)</span> Guardar em caixa de papelão até o final do tratamento e depois descartar</div>
+            <div class="alternativa"><span class="letra">D)</span> Jogar no lixo comum da cozinha junto com restos de alimentos</div>
+        </div>
+
+        <div class="questao">
+            <span class="numero">Questão 18</span>
+            <p class="enunciado">As roupas de cama e roupas pessoais de João devem ser manejadas com cuidado. A técnica MAIS adequada de lavagem é:</p>
+            <div class="alternativa"><span class="letra">A)</span> Lavar separadamente, em água quente, usando sabão comum ou alvejante</div>
+            <div class="alternativa"><span class="letra">B)</span> Não lavar durante o período de isolamento para evitar contaminação</div>
+            <div class="alternativa"><span class="letra">C)</span> Levar para lavanderia comercial sem informar sobre a condição do paciente</div>
+            <div class="alternativa"><span class="letra">D)</span> Lavar junto com as roupas de outras pessoas da casa, em água fria</div>
+        </div>
+
+        <div class="questao">
+            <span class="numero">Questão 19</span>
+            <p class="enunciado">Para a desinfecção de superfícies na casa de João (maçanetas, interruptores, celular), qual produto é MAIS indicado?</p>
+            <div class="alternativa"><span class="letra">A)</span> Álcool 70% ou solução de hipoclorito de sódio (água sanitária diluída)</div>
+            <div class="alternativa"><span class="letra">B)</span> Vinagre puro aplicado uma vez por semana nas superfícies</div>
+            <div class="alternativa"><span class="letra">C)</span> Perfume e produtos aromáticos para eliminar o vírus pelo cheiro</div>
+            <div class="alternativa"><span class="letra">D)</span> Apenas água e sabão comum sem produtos desinfetantes</div>
+        </div>
+
+        <div class="questao">
+            <span class="numero">Questão 20</span>
+            <p class="enunciado">João mora com mais duas pessoas. Para prevenir a contaminação dos coabitantes, é ESSENCIAL orientar sobre:</p>
+            <div class="alternativa"><span class="letra">A)</span> Uso exclusivo de objetos pessoais (toalhas, talheres, copos) por João</div>
+            <div class="alternativa"><span class="letra">B)</span> Os coabitantes devem sair de casa e deixar João completamente sozinho</div>
+            <div class="alternativa"><span class="letra">C)</span> Compartilhamento de todos os objetos para evitar desperdício</div>
+            <div class="alternativa"><span class="letra">D)</span> Não há necessidade de cuidados especiais dentro de casa</div>
+        </div>
+
+        <div class="disciplina">📊 SAÚDE COLETIVA (21-25)</div>
+
+        <div class="questao">
+            <span class="numero">Questão 21</span>
+            <p class="enunciado">A vigilância epidemiológica precisa investigar o caso de João. Qual ação faz parte da investigação epidemiológica de um caso de Mpox?</p>
+            <div class="alternativa"><span class="letra">A)</span> Notificar só depois que o paciente estiver completamente curado</div>
+            <div class="alternativa"><span class="letra">B)</span> Investigar somente se houver surto com mais de 10 casos na região</div>
+            <div class="alternativa"><span class="letra">C)</span> Busca ativa de contactantes próximos para monitoramento e orientação</div>
+            <div class="alternativa"><span class="letra">D)</span> Apenas confirmar o diagnóstico laboratorial sem outras ações</div>
+        </div>
+
+        <div class="questao">
+            <span class="numero">Questão 22</span>
+            <p class="enunciado">João teve contato próximo com amigos nos dias antes de sentir os sintomas. Qual é o período de INCUBAÇÃO da Mpox que deve ser considerado para rastreio de contactantes?</p>
+            <div class="alternativa"><span class="letra">A)</span> 30 a 45 dias</div>
+            <div class="alternativa"><span class="letra">B)</span> 5 a 21 dias</div>
+            <div class="alternativa"><span class="letra">C)</span> 2 a 3 meses</div>
+            <div class="alternativa"><span class="letra">D)</span> 1 a 3 dias</div>
+        </div>
+
+        <div class="questao">
+            <span class="numero">Questão 23</span>
+            <p class="enunciado">Para controlar a transmissão da Mpox, além das precauções padrão, qual precaução adicional deve ser orientada?</p>
+            <div class="alternativa"><span class="letra">A)</span> Não há necessidade de precauções adicionais</div>
+            <div class="alternativa"><span class="letra">B)</span> Precaução para gotículas somente</div>
+            <div class="alternativa"><span class="letra">C)</span> Precaução de contato devido à transmissão por lesões e secreções</div>
+            <div class="alternativa"><span class="letra">D)</span> Precaução para aerossóis apenas</div>
+        </div>
+
+        <div class="questao">
+            <span class="numero">Questão 24</span>
+            <p class="enunciado">João está desempregado, o que representa um determinante social da saúde. Como isso pode impactar NEGATIVAMENTE seu tratamento?</p>
+            <div class="alternativa"><span class="letra">A)</span> Dificulta acesso a alimentos adequados, medicamentos e aumenta estresse</div>
+            <div class="alternativa"><span class="letra">B)</span> Melhora a adesão ao isolamento pois ele não precisa trabalhar</div>
+            <div class="alternativa"><span class="letra">C)</span> Não tem nenhum impacto, pois o tratamento é gratuito no SUS</div>
+            <div class="alternativa"><span class="letra">D)</span> Facilita o tratamento porque ele tem mais tempo livre em casa</div>
+        </div>
+
+        <div class="questao">
+            <span class="numero">Questão 25</span>
+            <p class="enunciado">A educação em saúde é fundamental no caso de João. Qual informação é MAIS importante para combater o estigma na comunidade?</p>
+            <div class="alternativa"><span class="letra">A)</span> Divulgar o nome e endereço de pessoas com Mpox para evitar contato</div>
+            <div class="alternativa"><span class="letra">B)</span> Esclarecer que qualquer pessoa pode contrair Mpox através de contato próximo</div>
+            <div class="alternativa"><span class="letra">C)</span> Reforçar que Mpox é uma doença de grupos específicos de risco</div>
+            <div class="alternativa"><span class="letra">D)</span> Orientar que pessoas com Mpox devem ser isoladas permanentemente da sociedade</div>
+        </div>
+
+        <div class="disciplina">🧠 PSICOLOGIA (26-30)</div>
+
+        <div class="questao">
+            <span class="numero">Questão 26</span>
+            <p class="enunciado">João apresenta "humor deprimido e afeto restrito" durante a avaliação. Esses sinais indicam necessidade de:</p>
+            <div class="alternativa"><span class="letra">A)</span> Prescrição de antidepressivos pela equipe de enfermagem da UBS</div>
+            <div class="alternativa"><span class="letra">B)</span> Avaliação mais aprofundada e possível encaminhamento para saúde mental</div>
+            <div class="alternativa"><span class="letra">C)</span> Internação psiquiátrica imediata por risco iminente</div>
+            <div class="alternativa"><span class="letra">D)</span> Apenas observação, pois é normal sentir-se triste quando doente</div>
+        </div>
+
+        <div class="questao">
+            <span class="numero">Questão 27</span>
+            <p class="enunciado">João relata acordar várias vezes durante a noite com preocupações e perda de apetite. Esses sintomas sugerem principalmente:</p>
+            <div class="alternativa"><span class="letra">A)</span> Falta de atividade física por estar em isolamento domiciliar</div>
+            <div class="alternativa"><span class="letra">B)</span> Manifestações de ansiedade e possível quadro depressivo associado ao estigma</div>
+            <div class="alternativa"><span class="letra">C)</span> Efeitos colaterais dos analgésicos e antitérmicos prescritos</div>
+            <div class="alternativa"><span class="letra">D)</span> Progressão da Mpox com sintomas gastrointestinais e neurológicos</div>
+        </div>
+
+        <div class="questao">
+            <span class="numero">Questão 28</span>
+            <p class="enunciado">O estigma vivenciado por João, com sentimentos de ser "sujo" e "pária", pode resultar em qual consequência psicológica MAIS grave?</p>
+            <div class="alternativa"><span class="letra">A)</span> Fortalecimento da rede de apoio social e familiar</div>
+            <div class="alternativa"><span class="letra">B)</span> Aumento da produtividade no trabalho remoto</div>
+            <div class="alternativa"><span class="letra">C)</span> Agravamento do sofrimento psíquico e piora da saúde mental</div>
+            <div class="alternativa"><span class="letra">D)</span> Melhora da autoestima por buscar ajuda médica precocemente</div>
+        </div>
+
+        <div class="questao">
+            <span class="numero">Questão 29</span>
+            <p class="enunciado">João expressa: "Eu sou um problema agora". Esse pensamento é classificado como:</p>
+            <div class="alternativa"><span class="letra">A)</span> Pensamento delirante que requer internação urgente</div>
+            <div class="alternativa"><span class="letra">B)</span> Ideia de desvalorização pessoal relacionada ao estigma</div>
+            <div class="alternativa"><span class="letra">C)</span> Manifestação de consciência crítica sobre sua condição</div>
+            <div class="alternativa"><span class="letra">D)</span> Pensamento realista e adequado à situação de doença</div>
+        </div>
+
+        <div class="questao">
+            <span class="numero">Questão 30</span>
+            <p class="enunciado">Para fortalecer os mecanismos de enfrentamento (coping) de João durante o isolamento, qual intervenção de enfermagem é MAIS adequada?</p>
+            <div class="alternativa"><span class="letra">A)</span> Estimular que ele mantenha contato virtual com amigos e rede de apoio</div>
+            <div class="alternativa"><span class="letra">B)</span> Sugerir que ele assista todas as notícias sobre Mpox para se manter informado</div>
+            <div class="alternativa"><span class="letra">C)</span> Recomendar que pare todas as atividades, inclusive trabalho remoto</div>
+            <div class="alternativa"><span class="letra">D)</span> Orientar que evite qualquer tipo de contato, mesmo virtual, até a cura completa</div>
+        </div>
+
+        <button class="gabarito-btn" onclick="corrigirProva()">✅ CORRIGIR E VER RESULTADO</button>
+
+        <div class="resultado" id="resultado">
+            <div>🎯 SEU RESULTADO</div>
+            <div class="resultado-numero" id="resultado-texto"></div>
+            <div id="resultado-detalhe"></div>
+        </div>
+
+        <div class="gabarito" id="gabarito">
+            <h2>✅ GABARITO OFICIAL</h2>
+            <p style="text-align: center; margin-bottom: 15px; color: #856404;">
+                🟢 Verde = Acertou | 🔴 Vermelho = Errou | 🟡 Amarelo = Não respondeu
+            </p>
+            <div class="gabarito-grid" id="gabarito-grid">
+                <div class="gabarito-item">1-B</div>
+                <div class="gabarito-item">2-A</div>
+                <div class="gabarito-item">3-D</div>
+                <div class="gabarito-item">4-A</div>
+                <div class="gabarito-item">5-C</div>
+                <div class="gabarito-item">6-B</div>
+                <div class="gabarito-item">7-D</div>
+                <div class="gabarito-item">8-A</div>
+                <div class="gabarito-item">9-B</div>
+                <div class="gabarito-item">10-B</div>
+                <div class="gabarito-item">11-B</div>
+                <div class="gabarito-item">12-D</div>
+                <div class="gabarito-item">13-B</div>
+                <div class="gabarito-item">14-B</div>
+                <div class="gabarito-item">15-C</div>
+                <div class="gabarito-item">16-D</div>
+                <div class="gabarito-item">17-A</div>
+                <div class="gabarito-item">18-A</div>
+                <div class="gabarito-item">19-A</div>
+                <div class="gabarito-item">20-A</div>
+                <div class="gabarito-item">21-C</div>
+                <div class="gabarito-item">22-B</div>
+                <div class="gabarito-item">23-C</div>
+                <div class="gabarito-item">24-A</div>
+                <div class="gabarito-item">25-B</div>
+                <div class="gabarito-item">26-B</div>
+                <div class="gabarito-item">27-B</div>
+                <div class="gabarito-item">28-C</div>
+                <div class="gabarito-item">29-B</div>
+                <div class="gabarito-item">30-A</div>
+            </div>
+            <p style="text-align: center; margin-top: 20px; color: #856404; font-weight: bold;">
+                📊 Distribuição: 10A | 10B | 5C | 5D
+            </p>
+            <p style="text-align: center; margin-top: 10px; color: #856404; font-size: 0.9em;">
+                Respostas A: 2, 4, 8, 17, 18, 19, 20, 24, 30<br>
+                Respostas B: 1, 6, 9, 10, 11, 13, 14, 22, 25, 26, 27, 29<br>
+                Respostas C: 5, 15, 21, 23, 28<br>
+                Respostas D: 3, 7, 12, 16
+            </p>
+        </div>
+
+    </div>
+
+    <script>
+        var gabarito = {
+            1: 'B', 2: 'A', 3: 'D', 4: 'A', 5: 'C',
+            6: 'B', 7: 'D', 8: 'A', 9: 'B', 10: 'B',
+            11: 'B', 12: 'D', 13: 'B', 14: 'B', 15: 'C',
+            16: 'D', 17: 'A', 18: 'A', 19: 'A', 20: 'A',
+            21: 'C', 22: 'B', 23: 'C', 24: 'A', 25: 'B',
+            26: 'B', 27: 'B', 28: 'C', 29: 'B', 30: 'A'
+        };
+
+        var respostas = {};
+
+        function selecionarAlternativa(questao, letra, elemento) {
+            respostas[questao] = letra;
+            
+            var questaoDiv = elemento.closest('.questao');
+            var alternativas = questaoDiv.querySelectorAll('.alternativa');
+            
+            alternativas.forEach(function(alt) {
+                alt.classList.remove('selecionada');
+            });
+            
+            elemento.classList.add('selecionada');
+        }
+
+        function corrigirProva() {
+            var acertos = 0;
+            var totalRespondidas = Object.keys(respostas).length;
+
+            if (totalRespondidas < 30) {
+                alert('Você respondeu ' + totalRespondidas + ' de 30 questões. Responda todas antes de corrigir!');
+                return;
+            }
+
+            var gabaritoItems = document.querySelectorAll('.gabarito-item');
+
+            for (var questao = 1; questao <= 30; questao++) {
+                var respostaUsuario = respostas[questao];
+                var respostaCorreta = gabarito[questao];
+                
+                var questaoDiv = document.querySelectorAll('.questao')[questao - 1];
+                var alternativas = questaoDiv.querySelectorAll('.alternativa');
+                
+                alternativas.forEach(function(alt) {
+                    var letra = alt.querySelector('.letra').textContent.replace(')', '').trim();
+                    
+                    alt.classList.remove('selecionada');
+                    
+                    if (letra === respostaCorreta) {
+                        alt.classList.add('correta');
+                    }
+                    
+                    if (letra === respostaUsuario && letra !== respostaCorreta) {
+                        alt.classList.add('errada');
+                    }
+                });
+
+                var gabaritoItem = gabaritoItems[questao - 1];
+                
+                if (!respostaUsuario) {
+                    gabaritoItem.classList.add('nao-respondeu');
+                } else if (respostaUsuario === respostaCorreta) {
+                    acertos++;
+                    gabaritoItem.classList.add('acertou');
+                } else {
+                    gabaritoItem.classList.add('errou');
+                    gabaritoItem.textContent = questao + '-' + respostaCorreta + ' (Você: ' + respostaUsuario + ')';
+                }
+            }
+
+            var percentual = (acertos / 30 * 100).toFixed(1);
+            var resultado = document.getElementById('resultado');
+            var resultadoTexto = document.getElementById('resultado-texto');
+            var resultadoDetalhe = document.getElementById('resultado-detalhe');
+            
+            resultadoTexto.textContent = acertos + ' / 30 acertos';
+            
+            var emoji = '';
+            var mensagem = '';
+            
+            if (percentual >= 90) {
+                emoji = '🏆';
+                mensagem = 'EXCELENTE! Você está muito bem preparado!';
+            } else if (percentual >= 70) {
+                emoji = '👏';
+                mensagem = 'PARABÉNS! Bom desempenho!';
+            } else if (percentual >= 50) {
+                emoji = '📚';
+                mensagem = 'Continue estudando, você está no caminho certo!';
+            } else {
+                emoji = '💪';
+                mensagem = 'Não desanime! Revise o conteúdo e tente novamente!';
+            }
+            
+            resultadoDetalhe.innerHTML = emoji + ' ' + percentual + '%<br>' + mensagem;
+            
+            resultado.classList.add('show');
+            resultado.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            
+            var gabaritoDiv = document.getElementById('gabarito');
+            gabaritoDiv.classList.add('show');
+        }
+
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            var todasAlternativas = document.querySelectorAll('.alternativa');
+            var touchHandled = false;
+            
+            todasAlternativas.forEach(function(alternativa) {
+                var handleClick = function(questaoDiv, letra, element) {
+                    var numeroQuestao = questaoDiv.querySelector('.numero').textContent.replace('Questão ', '').trim();
+                    selecionarAlternativa(parseInt(numeroQuestao), letra, element);
+                };
+                
+                alternativa.addEventListener('touchend', function(e) {
+                    e.preventDefault();
+                    touchHandled = true;
+                    var questaoDiv = this.closest('.questao');
+                    var letra = this.querySelector('.letra').textContent.replace(')', '').trim();
+                    handleClick(questaoDiv, letra, this);
+                    
+                    setTimeout(function() {
+                        touchHandled = false;
+                    }, 300);
+                });
+                
+                alternativa.addEventListener('click', function(e) {
+                    if (!touchHandled) {
+                        var questaoDiv = this.closest('.questao');
+                        var letra = this.querySelector('.letra').textContent.replace(')', '').trim();
+                        handleClick(questaoDiv, letra, this);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
